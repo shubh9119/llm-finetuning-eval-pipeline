@@ -9,7 +9,10 @@ import os
 import textwrap
 from getpass import getpass
 
-from openai import OpenAI
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = object
 
 
 PATTERNS = [
