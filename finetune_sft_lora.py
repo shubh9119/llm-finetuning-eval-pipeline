@@ -20,8 +20,10 @@ model = FastLanguageModel.get_peft_model(
     ],
 )
 
-# Set up chat template and prepare dataset
+# Set up chat template and ensure pad_token is defined for batched SFT padding
 tokenizer = get_chat_template(tokenizer, chat_template="llama-3.1")
+if tokenizer.pad_token is None:
+    tokenizer.pad_token = tokenizer.eos_token
 dataset = load_dataset("mlabonne/FineTome-100k", split="train")
 dataset = standardize_sharegpt(dataset)
 dataset = dataset.map(
@@ -48,8 +50,8 @@ trainer = SFTTrainer(
         warmup_steps=5,
         max_steps=60,
         learning_rate=2e-4,
-        fp16=not torch.cuda.is_bf16_supported(),
-        bf16=torch.cuda.is_bf16_supported(),
+        fp16=torch.cuda.is_available() and not torch.cuda.is_bf16_supported(),
+        bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(),
         logging_steps=1,
         output_dir="outputs",
     ),
