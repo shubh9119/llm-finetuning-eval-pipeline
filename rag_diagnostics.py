@@ -1,5 +1,5 @@
 """
-RAG Failure Diagnostics Clinic
+Production LLM & RAG Failure Pattern Evaluator (P01-P12)
 
 Diagnose LLM + RAG bugs into reusable failure patterns (P01–P12).
 """
@@ -277,9 +277,9 @@ def run_once(client: OpenAI, model_name: str, system_prompt: str) -> None:
     }
 
     try:
-        with open("rag_failure_report.json", "w", encoding="utf-8") as f:
+        with open("llm_eval_diagnostics_report.json", "w", encoding="utf-8") as f:
             json.dump(report, f, indent=2)
-        print("\nSaved report to rag_failure_report.json\n")
+        print("\nSaved report to llm_eval_diagnostics_report.json\n")
     except OSError as exc:
         print(f"\nCould not write report file: {exc}\n")
 
